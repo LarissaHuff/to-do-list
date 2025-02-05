@@ -7,9 +7,9 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public record CompleteTaskDto(UUID id, String name, String description,
-                              Priority priority, LocalDate created, LocalDate done) {
+                              Priority priority, LocalDate created, LocalDate started, LocalDate done) {
     public CompleteTaskDto(Task task) {
         this(task.getId(), task.getName(), task.getDescription(),
-                task.getPriority(), task.getCreated(), task.getDone());
+                task.getPriority(), task.getCreated(), task.getStarted(), task.getDone());
     }
 }

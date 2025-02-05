@@ -2,12 +2,15 @@ package com.to_do_list.service;
 
 import com.to_do_list.dto.TaskDto;
 import com.to_do_list.exception.BusinessException;
+import com.to_do_list.model.Priority;
 import com.to_do_list.model.Task;
 import com.to_do_list.repository.TaskRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,6 +34,30 @@ public class TaskService {
         return taskRepository.findById(id).orElseThrow(() -> new BusinessException("Task not found"));
     }
 
+
+    public List<Task> getPendingTasks() {
+        List<Task> tasks = taskRepository.findAll();
+        return tasks.stream()
+                .filter(it -> it.getDone() == null)
+                .sorted(Comparator.comparing(Task::getPriority))
+                .toList();
+    }
+
+    public List<Task> getCompletedTasks() {
+        List<Task> tasks = taskRepository.findAll();
+        return tasks.stream()
+                .filter(it -> it.getDone() != null)
+                .toList();
+    }
+
+    public List<Task> getAllTasksByPriority(Priority priority) {
+        List<Task> tasks = taskRepository.findAll();
+
+        return tasks.stream()
+                .filter(it -> it.getPriority().equals(priority))
+                .toList();
+    }
+
     public Task update(UUID id, TaskDto taskDto) {
         Task task = findById(id);
         task.setName(taskDto.name());
@@ -40,14 +67,24 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public Task completeTask(UUID id) {
+    public Task start(UUID id) {
         Task task = findById(id);
-        task.setDone(LocalDate.now());
+        task.setStarted(LocalDate.now());
+        task.setDone(null);
 
         return taskRepository.save(task);
     }
 
-    public void delete(UUID id){
+    public Task completeTask(UUID id) {
+        Task task = findById(id);
+        if (task.getDone() != null) {
+            throw new BusinessException("Task already completed.");
+        }
+        task.setDone(LocalDate.now());
+        return taskRepository.save(task);
+    }
+
+    public void delete(UUID id) {
         taskRepository.deleteById(id);
     }
 }

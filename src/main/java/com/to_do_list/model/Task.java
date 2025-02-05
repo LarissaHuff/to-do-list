@@ -25,6 +25,8 @@ public class Task {
 
     LocalDate created;
 
+    LocalDate started;
+
     @Enumerated(EnumType.STRING)
     Priority priority;
 }

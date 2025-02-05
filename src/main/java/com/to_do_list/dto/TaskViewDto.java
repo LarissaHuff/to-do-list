@@ -7,9 +7,9 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public record TaskViewDto(UUID id, String name, String description,
-                          Priority priority, LocalDate created) {
+                          Priority priority, LocalDate started,LocalDate created) {
     public TaskViewDto(Task task) {
         this(task.getId(), task.getName(), task.getDescription(),
-                task.getPriority(), task.getCreated());
+                task.getPriority(), task.getStarted(), task.getCreated());
     }
 }
