@@ -1,6 +1,5 @@
 package com.to_do_list.controller;
 
-import com.to_do_list.dto.CompleteTaskDto;
 import com.to_do_list.dto.TaskDto;
 import com.to_do_list.dto.TaskViewDto;
 import com.to_do_list.model.Priority;
@@ -48,20 +47,20 @@ public class TaskController {
     }
 
     @PatchMapping("/{id}")
-    CompleteTaskDto completeTask(@PathVariable UUID id) {
-        return new CompleteTaskDto(taskService.completeTask(id));
+    TaskViewDto completeTask(@PathVariable UUID id) {
+        return new TaskViewDto(taskService.completeTask(id));
     }
 
     //Receber uma lista de status talvez
     @GetMapping
     List<TaskViewDto> findAll(@RequestParam(required = false) TaskStatusEnum taskStatus) {
-         List<Task> taskList = taskService.findAll(taskStatus);
-         return taskList.stream()
-                 .map(TaskViewDto::new)
-                 .toList();
+        List<Task> taskList = taskService.findAll(taskStatus);
+        return taskList.stream()
+                .map(TaskViewDto::new)
+                .toList();
     }
 
-    @PatchMapping("/start/{id}")
+    @PatchMapping("{id}/start")
     public TaskViewDto start(@PathVariable UUID id) {
         return new TaskViewDto(taskService.start(id));
     }
