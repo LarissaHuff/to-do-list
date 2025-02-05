@@ -5,6 +5,7 @@ import com.to_do_list.dto.TaskDto;
 import com.to_do_list.dto.TaskViewDto;
 import com.to_do_list.model.Priority;
 import com.to_do_list.model.Task;
+import com.to_do_list.model.TaskStatusEnum;
 import com.to_do_list.service.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class TaskController {
         return new TaskViewDto(taskService.findById(id));
     }
 
-    @GetMapping
+    @GetMapping("/pending")
     List<TaskViewDto> getPendingTasks() {
         List<Task> tasks = taskService.getPendingTasks();
 
@@ -46,21 +47,22 @@ public class TaskController {
                 .toList();
     }
 
-    @GetMapping("/completed")
-    public List<CompleteTaskDto> getCompletedTasks() {
-        List<Task> tasks = taskService.getCompletedTasks();
-        return tasks.stream()
-                .map(CompleteTaskDto::new)
-                .toList();
-    }
-
     @PatchMapping("/{id}")
     CompleteTaskDto completeTask(@PathVariable UUID id) {
         return new CompleteTaskDto(taskService.completeTask(id));
     }
 
+    //Receber uma lista de status talvez
+    @GetMapping
+    List<TaskViewDto> findAll(@RequestParam(required = false) TaskStatusEnum taskStatus) {
+         List<Task> taskList = taskService.findAll(taskStatus);
+         return taskList.stream()
+                 .map(TaskViewDto::new)
+                 .toList();
+    }
+
     @PatchMapping("/start/{id}")
-    public TaskViewDto start(@PathVariable UUID id){
+    public TaskViewDto start(@PathVariable UUID id) {
         return new TaskViewDto(taskService.start(id));
     }
 

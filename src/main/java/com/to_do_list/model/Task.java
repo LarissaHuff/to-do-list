@@ -15,18 +15,21 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID id;
+    private UUID id;
 
-    String name;
+    private String name;
 
-    String description;
+    private String description;
 
-    LocalDate done;
+    private LocalDate done;
 
-    LocalDate created;
+    private LocalDate created;
 
-    LocalDate started;
+    private LocalDate started;
 
     @Enumerated(EnumType.STRING)
-    Priority priority;
+    private TaskStatusEnum status;
+
+    @Enumerated(EnumType.STRING)
+    private Priority priority;
 }

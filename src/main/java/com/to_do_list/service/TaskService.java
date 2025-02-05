@@ -4,6 +4,7 @@ import com.to_do_list.dto.TaskDto;
 import com.to_do_list.exception.BusinessException;
 import com.to_do_list.model.Priority;
 import com.to_do_list.model.Task;
+import com.to_do_list.model.TaskStatusEnum;
 import com.to_do_list.repository.TaskRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class TaskService {
         task.setDescription(taskDto.description());
         task.setPriority(taskDto.priority());
         task.setCreated(LocalDate.now());
+        task.setStatus(TaskStatusEnum.CREATED);
 
         return taskRepository.save(task);
 
@@ -40,13 +42,6 @@ public class TaskService {
         return tasks.stream()
                 .filter(it -> it.getDone() == null)
                 .sorted(Comparator.comparing(Task::getPriority))
-                .toList();
-    }
-
-    public List<Task> getCompletedTasks() {
-        List<Task> tasks = taskRepository.findAll();
-        return tasks.stream()
-                .filter(it -> it.getDone() != null)
                 .toList();
     }
 
@@ -71,6 +66,7 @@ public class TaskService {
         Task task = findById(id);
         task.setStarted(LocalDate.now());
         task.setDone(null);
+        task.setStatus(TaskStatusEnum.STARTED);
 
         return taskRepository.save(task);
     }
@@ -81,10 +77,18 @@ public class TaskService {
             throw new BusinessException("Task already completed.");
         }
         task.setDone(LocalDate.now());
+        task.setStatus(TaskStatusEnum.DONE);
         return taskRepository.save(task);
     }
 
     public void delete(UUID id) {
         taskRepository.deleteById(id);
+    }
+
+    public List<Task> findAll(TaskStatusEnum taskStatus) {
+        List<Task> tasks = taskRepository.findAllByStatus(taskStatus);
+        return tasks.stream()
+                .sorted(Comparator.comparing(Task::getPriority))
+                .toList();
     }
 }
