@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TaskRepository extends JpaRepository<Task, UUID> {
-    @Query("select t from Task t where t.status = :status or :status = null")
+    @Query("select t from Task t where t.status = :status or :status is null")
     List<Task> findAllByStatus(TaskStatusEnum status);
 }

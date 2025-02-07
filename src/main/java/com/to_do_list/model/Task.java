@@ -23,12 +23,12 @@ public class Task {
 
     private LocalDate done;
 
-    private LocalDate created;
+    private LocalDate created = LocalDate.now();
 
     private LocalDate started;
 
     @Enumerated(EnumType.STRING)
-    private TaskStatusEnum status;
+    private TaskStatusEnum status = TaskStatusEnum.CREATED;
 
     @Enumerated(EnumType.STRING)
     private Priority priority;

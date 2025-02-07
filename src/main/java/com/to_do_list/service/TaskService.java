@@ -25,8 +25,6 @@ public class TaskService {
         task.setName(taskDto.name());
         task.setDescription(taskDto.description());
         task.setPriority(taskDto.priority());
-        task.setCreated(LocalDate.now());
-        task.setStatus(TaskStatusEnum.CREATED);
 
         return taskRepository.save(task);
 
